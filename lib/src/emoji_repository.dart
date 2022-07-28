@@ -9,7 +9,7 @@ class EmojiRepository {
 
   Future<List<Emoji>> getEmojis(
       BuildContext context, EmojiType emojiType) async {
-    final data = await rootBundle
+    final data = await DefaultAssetBundle.of(context)
         .loadString('assets/emojis/${_mapEmojiTypeToEmojiFile(emojiType)}');
 
     final emojiList = await jsonDecode(data) as Map<String, dynamic>;
