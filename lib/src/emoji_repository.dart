@@ -10,7 +10,7 @@ class EmojiRepository {
   Future<List<Emoji>> getEmojis(
       BuildContext context, EmojiType emojiType) async {
     final data = await DefaultAssetBundle.of(context)
-        .loadString('assets/emojis/${_mapEmojiTypeToEmojiFile(emojiType)}');
+        .loadString('packages/emoji_dialog_picker/assets/emojis/${_mapEmojiTypeToEmojiFile(emojiType)}');
 
     final emojiList = await jsonDecode(data) as Map<String, dynamic>;
 
@@ -21,7 +21,7 @@ class EmojiRepository {
 
   Future<List<Emoji>> findEmoji(String filter) async {
     if (emojis.isEmpty) {
-      final data = await rootBundle.loadString('assets/emojis/emojis.json',
+      final data = await rootBundle.loadString('packages/emoji_dialog_picker/assets/emojis/emojis.json',
           cache: false);
       final emojiList = await jsonDecode(data) as Map<String, dynamic>;
 
