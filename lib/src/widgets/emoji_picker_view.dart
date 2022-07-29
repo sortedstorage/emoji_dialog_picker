@@ -233,8 +233,12 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
                         child: Center(child: CircularProgressIndicator()),
                       );
                     } else if (state.emojis!.isEmpty) {
-                      return const SliverFillRemaining(
-                        child: Center(child: Text('No Results Found')),
+                      return SliverFillRemaining(
+                        child: Center(child: Text(
+                          'No Results Found',
+                          style: widget.textStyle,
+                          ),
+                        ),
                       );
                     }
 
