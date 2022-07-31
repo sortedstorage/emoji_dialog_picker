@@ -21,6 +21,7 @@ class EmojiPickerView extends StatefulWidget {
     this.width,
     this.decoration,
     this.scrollBehavior,
+    this.header,
     this.hintText = 'Search for an emoji',
     this.backgroundColor,
     this.searchBarColor,
@@ -49,6 +50,9 @@ class EmojiPickerView extends StatefulWidget {
 
   /// Describes how the CustomScrollView and ListView should behave.
   final ScrollBehavior? scrollBehavior;
+
+  /// Widget to display on the header
+  final Widget? header;
 
   /// {@macro hint_text}
   final String hintText;
@@ -104,6 +108,9 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
           child: CustomScrollView(
             scrollBehavior: widget.scrollBehavior ?? const ScrollGlowRemover(),
             slivers: [
+              SliverToBoxAdapter(
+                child: widget.header,
+              ),
               SliverToBoxAdapter(
                 child: SearchBar(
                   hintText: widget.hintText,
@@ -234,9 +241,10 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
                       );
                     } else if (state.emojis!.isEmpty) {
                       return SliverFillRemaining(
-                        child: Center(child: Text(
-                          'No Results Found',
-                          style: widget.textStyle,
+                        child: Center(
+                          child: Text(
+                            'No Results Found',
+                            style: widget.textStyle,
                           ),
                         ),
                       );
