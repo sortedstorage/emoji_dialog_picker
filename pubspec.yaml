@@ -1,6 +1,6 @@
 name: emoji_dialog_picker
 description: Emoji dialog picker makes it easy to select emojis from any platform.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/sortedstorage/emoji_dialog_picker
 
 environment:
