@@ -21,6 +21,7 @@ class EmojiPickerView extends StatefulWidget {
     this.width,
     this.decoration,
     this.scrollBehavior,
+    this.header,
     this.hintText = 'Search for an emoji',
     this.backgroundColor,
     this.searchBarColor,
@@ -49,6 +50,9 @@ class EmojiPickerView extends StatefulWidget {
 
   /// Describes how the CustomScrollView and ListView should behave.
   final ScrollBehavior? scrollBehavior;
+
+  /// Widget to display on the header
+  final Widget? header;
 
   /// {@macro hint_text}
   final String hintText;
@@ -96,15 +100,15 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
           ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 18,
-            horizontal: 24,
-          ),
-          child: CustomScrollView(
-            scrollBehavior: widget.scrollBehavior ?? const ScrollGlowRemover(),
-            slivers: [
-              SliverToBoxAdapter(
+        body: CustomScrollView(
+          scrollBehavior: widget.scrollBehavior ?? const ScrollGlowRemover(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: widget.header,
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 10, left: 24, right: 24),
+              sliver: SliverToBoxAdapter(
                 child: SearchBar(
                   hintText: widget.hintText,
                   onChanged: (filter) =>
@@ -116,165 +120,170 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
                   hintStyle: widget.hintStyle,
                 ),
               ),
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 10),
-                sliver: SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 32,
-                    child: Center(
-                      child: StreamBuilder<EmojiPickerState>(
-                        stream: emojiPickerCubit.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final state = snapshot.data!;
-                            if (state.isSearching) {
-                              return const SizedBox();
-                            }
-
-                            final selectedEmojiType = state.selectedEmojiType;
-                            return ScrollConfiguration(
-                              behavior: widget.scrollBehavior ??
-                                  const ScrollGlowRemover(),
-                              child: ListView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  EmojiIconSelector(
-                                    isSelected:
-                                        selectedEmojiType == EmojiType.activity,
-                                    icon: const Icon(Icons.sports_basketball),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.activity),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected: selectedEmojiType ==
-                                        EmojiType.animalsAndNature,
-                                    icon: const Icon(Icons.park),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.animalsAndNature),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected:
-                                        selectedEmojiType == EmojiType.flags,
-                                    icon: const Icon(Icons.flag),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.flags),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected: selectedEmojiType ==
-                                        EmojiType.foodAndDrink,
-                                    icon: const Icon(Icons.fastfood),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.foodAndDrink),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected:
-                                        selectedEmojiType == EmojiType.objects,
-                                    icon: const Icon(EvaIcons.cube),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.objects),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected:
-                                        selectedEmojiType == EmojiType.people,
-                                    icon: const Icon(Icons.emoji_emotions),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.people),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected:
-                                        selectedEmojiType == EmojiType.symbols,
-                                    icon: const Icon(EvaIcons.info),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.symbols),
-                                  ),
-                                  EmojiIconSelector(
-                                    isSelected: selectedEmojiType ==
-                                        EmojiType.travelsAndPlaces,
-                                    icon: const Icon(Icons.landscape),
-                                    activeColor: widget.activeColor,
-                                    inactiveColor: widget.inactiveColor,
-                                    onTap: () => emojiPickerCubit.getEmoji(
-                                        context, EmojiType.travelsAndPlaces),
-                                  ),
-                                ],
-                              ),
-                            );
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.only(top: 10, left: 24, right: 24, bottom: 18),
+              sliver: SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 32,
+                  child: Center(
+                    child: StreamBuilder<EmojiPickerState>(
+                      stream: emojiPickerCubit.stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final state = snapshot.data!;
+                          if (state.isSearching) {
+                            return const SizedBox();
                           }
 
-                          return const SizedBox();
-                        },
-                      ),
+                          final selectedEmojiType = state.selectedEmojiType;
+                          return ScrollConfiguration(
+                            behavior: widget.scrollBehavior ??
+                                const ScrollGlowRemover(),
+                            child: ListView(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                EmojiIconSelector(
+                                  isSelected:
+                                      selectedEmojiType == EmojiType.activity,
+                                  icon: const Icon(Icons.sports_basketball),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.activity),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected: selectedEmojiType ==
+                                      EmojiType.animalsAndNature,
+                                  icon: const Icon(Icons.park),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.animalsAndNature),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected:
+                                      selectedEmojiType == EmojiType.flags,
+                                  icon: const Icon(Icons.flag),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.flags),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected: selectedEmojiType ==
+                                      EmojiType.foodAndDrink,
+                                  icon: const Icon(Icons.fastfood),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.foodAndDrink),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected:
+                                      selectedEmojiType == EmojiType.objects,
+                                  icon: const Icon(EvaIcons.cube),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.objects),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected:
+                                      selectedEmojiType == EmojiType.people,
+                                  icon: const Icon(Icons.emoji_emotions),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.people),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected:
+                                      selectedEmojiType == EmojiType.symbols,
+                                  icon: const Icon(EvaIcons.info),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.symbols),
+                                ),
+                                EmojiIconSelector(
+                                  isSelected: selectedEmojiType ==
+                                      EmojiType.travelsAndPlaces,
+                                  icon: const Icon(Icons.landscape),
+                                  activeColor: widget.activeColor,
+                                  inactiveColor: widget.inactiveColor,
+                                  onTap: () => emojiPickerCubit.getEmoji(
+                                      context, EmojiType.travelsAndPlaces),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        return const SizedBox();
+                      },
                     ),
                   ),
                 ),
               ),
-              StreamBuilder<EmojiPickerState>(
-                stream: emojiPickerCubit.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final state = snapshot.data!;
-                    if (state.emojis == null) {
-                      return const SliverFillRemaining(
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else if (state.emojis!.isEmpty) {
-                      return const SliverFillRemaining(
-                        child: Center(child: Text('No Results Found')),
-                      );
-                    }
-
-                    return SliverPadding(
-                      padding: const EdgeInsets.only(left: 12, top: 12),
-                      sliver: SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 48,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return MouseRegion(
-                              cursor: MaterialStateMouseCursor.clickable,
-                              child: GestureDetector(
-                                onTap: () {
-                                  widget.onEmojiSelected(
-                                    state.emojis!.elementAt(index).emoji,
-                                  );
-                                  Navigator.pop(context);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(6),
-                                  child: Text(
-                                    state.emojis!.elementAt(index).emoji,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          childCount: state.emojis!.length,
+            ),
+            StreamBuilder<EmojiPickerState>(
+              stream: emojiPickerCubit.stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final state = snapshot.data!;
+                  if (state.emojis == null) {
+                    return const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else if (state.emojis!.isEmpty) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text(
+                          'No Results Found',
+                          style: widget.textStyle,
                         ),
                       ),
                     );
                   }
-                  return const SliverToBoxAdapter();
-                },
-              ),
-            ],
-          ),
+
+                  return SliverPadding(
+                    padding: const EdgeInsets.only(left: 12, top: 12),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 48,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return MouseRegion(
+                            cursor: MaterialStateMouseCursor.clickable,
+                            child: GestureDetector(
+                              onTap: () {
+                                widget.onEmojiSelected(
+                                  state.emojis!.elementAt(index).emoji,
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Text(
+                                  state.emojis!.elementAt(index).emoji,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        childCount: state.emojis!.length,
+                      ),
+                    ),
+                  );
+                }
+                return const SliverToBoxAdapter();
+              },
+            ),
+          ],
         ),
       ),
     );

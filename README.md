@@ -56,6 +56,7 @@ EmojiButton(
 - decoration - Decoration of [EmojiPickerView](emoji-picker-view)
 - backgroundColor - Background color of [EmojiPickerView](emoji-picker-view)
 - scrollBehavior - Describes how the CustomScrollView and ListView should behave
+- header - Widget to display on the header
 - hintText - The hint text to display in the search bar.
 - searchBarColor - The background color of the search bar.
 - searchIconColor - The color of the search icon
