@@ -12,7 +12,7 @@ class EmojiRepository {
     final data = await DefaultAssetBundle.of(context)
         .loadString('assets/emojis/${_mapEmojiTypeToEmojiFile(emojiType)}');
 
-    final emojiList = await jsonDecode(data) as Map<String, dynamic>;
+    final emojiList = jsonDecode(data) as Map<String, dynamic>;
 
     return EmojiList.fromJson(
       <String, dynamic>{'emojis': emojiList.values.toList()},
@@ -23,7 +23,7 @@ class EmojiRepository {
     if (emojis.isEmpty) {
       final data = await rootBundle.loadString('assets/emojis/emojis.json',
           cache: false);
-      final emojiList = await jsonDecode(data) as Map<String, dynamic>;
+      final emojiList = jsonDecode(data) as Map<String, dynamic>;
 
       emojis = EmojiList.fromJson(
         <String, dynamic>{'emojis': emojiList.values.toList()},
