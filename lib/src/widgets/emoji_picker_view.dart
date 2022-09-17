@@ -30,7 +30,11 @@ class EmojiPickerView extends StatefulWidget {
     this.hintStyle,
     this.activeColor,
     this.inactiveColor,
+    this.shouldPopOnSelect = true,
   }) : super(key: key);
+
+  /// Should pop the current Route on Navigator Stack once emoji is selected
+  final bool shouldPopOnSelect;
 
   /// Optional height of [EmojiPickerView].
   final double? height;
@@ -254,7 +258,9 @@ class _EmojiPickerViewState extends State<EmojiPickerView> {
                                   widget.onEmojiSelected(
                                     state.emojis!.elementAt(index).emoji,
                                   );
-                                  Navigator.pop(context);
+                                  if (widget.shouldPopOnSelect) {
+                                    Navigator.pop(context);
+                                  }
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(6),
